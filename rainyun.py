@@ -91,7 +91,7 @@ def do_login(driver: WebDriver, wait: WebDriverWait, user: str, pwd: str) -> boo
         process_captcha()
     except TimeoutException:
         logger.info("未触发验证码")
-    time.sleep(5)
+    time.sleep(30)
     driver.switch_to.default_content()
     if driver.current_url == "https://app.rainyun.com/dashboard":
         logger.info("登录成功！")
@@ -191,7 +191,7 @@ def process_captcha():
                     EC.element_to_be_clickable((By.XPATH, '//*[@id="tcStatus"]/div[2]/div[2]/div/div')))
                 logger.info("提交验证码")
                 confirm.click()
-                time.sleep(5)
+                time.sleep(30)
                 result = wait.until(EC.visibility_of_element_located((By.XPATH, '//*[@id="tcOperation"]')))
                 if result.get_attribute("class") == 'tc-opera pointer show-success':
                     logger.info("验证码通过")
@@ -203,9 +203,9 @@ def process_captcha():
         else:
             logger.error("当前验证码识别率低，尝试刷新")
         reload = driver.find_element(By.XPATH, '//*[@id="reload"]')
-        time.sleep(5)
+        time.sleep(30)
         reload.click()
-        time.sleep(5)
+        time.sleep(30)
         process_captcha()
     except TimeoutException:
         logger.error("获取验证码图片失败")
