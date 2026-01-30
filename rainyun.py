@@ -125,7 +125,7 @@ def init_selenium() -> WebDriver:
 
 def download_image(url, filename):
     os.makedirs("temp", exist_ok=True)
-    response = requests.get(url, timeout=10)
+    response = requests.get(url, timeout=90)
     if response.status_code == 200:
         path = os.path.join("temp", filename)
         with open(path, "wb") as f:
@@ -329,7 +329,7 @@ if __name__ == "__main__":
     
     logger.info("正在转到赚取积分页")
     driver.get("https://app.rainyun.com/account/reward/earn")
-    driver.implicitly_wait(5)
+    driver.implicitly_wait(90)
     earn = driver.find_element(By.XPATH,
                                "//span[contains(text(), '每日签到')]/ancestor::div[1]//a[contains(text(), '领取奖励')]")
     logger.info("点击赚取积分")
