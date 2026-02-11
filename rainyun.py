@@ -57,7 +57,7 @@ def load_cookies(driver: WebDriver) -> bool:
 def check_login_status(driver: WebDriver, wait: WebDriverWait) -> bool:
     """检查是否已登录"""
     driver.get("https://app.rainyun.com/dashboard")
-    time.sleep(90)
+    time.sleep(3)
     # 如果跳转到登录页面，说明 cookie 失效
     if "login" in driver.current_url:
         logger.info("Cookie 已失效，需要重新登录")
@@ -91,7 +91,7 @@ def do_login(driver: WebDriver, wait: WebDriverWait, user: str, pwd: str) -> boo
         process_captcha()
     except TimeoutException:
         logger.info("未触发验证码")
-    time.sleep(90)
+    time.sleep(5)
     driver.switch_to.default_content()
     if driver.current_url == "https://app.rainyun.com/dashboard":
         logger.info("登录成功！")
@@ -125,7 +125,7 @@ def init_selenium() -> WebDriver:
 
 def download_image(url, filename):
     os.makedirs("temp", exist_ok=True)
-    response = requests.get(url, timeout=90)
+    response = requests.get(url, timeout=10)
     if response.status_code == 200:
         path = os.path.join("temp", filename)
         with open(path, "wb") as f:
@@ -191,7 +191,7 @@ def process_captcha():
                     EC.element_to_be_clickable((By.XPATH, '//*[@id="tcStatus"]/div[2]/div[2]/div/div')))
                 logger.info("提交验证码")
                 confirm.click()
-                time.sleep(90)
+                time.sleep(5)
                 result = wait.until(EC.visibility_of_element_located((By.XPATH, '//*[@id="tcOperation"]')))
                 if result.get_attribute("class") == 'tc-opera pointer show-success':
                     logger.info("验证码通过")
@@ -203,9 +203,9 @@ def process_captcha():
         else:
             logger.error("当前验证码识别率低，尝试刷新")
         reload = driver.find_element(By.XPATH, '//*[@id="reload"]')
-        time.sleep(90)
+        time.sleep(5)
         reload.click()
-        time.sleep(90)
+        time.sleep(5)
         process_captcha()
     except TimeoutException:
         logger.error("获取验证码图片失败")
@@ -329,7 +329,7 @@ if __name__ == "__main__":
     
     logger.info("正在转到赚取积分页")
     driver.get("https://app.rainyun.com/account/reward/earn")
-    driver.implicitly_wait(90)
+    driver.implicitly_wait(5)
     earn = driver.find_element(By.XPATH,
                                "//span[contains(text(), '每日签到')]/ancestor::div[1]//a[contains(text(), '领取奖励')]")
     logger.info("点击赚取积分")
@@ -346,4 +346,3 @@ if __name__ == "__main__":
     logger.info(f"当前剩余积分: {current_points} | 约为 {current_points / 2000:.2f} 元")
     logger.info("任务执行成功！")
     driver.quit()
-
